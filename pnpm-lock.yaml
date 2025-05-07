@@ -14,9 +14,6 @@ importers:
       mammoth:
         specifier: ^1.9.0
         version: 1.9.0
-      pdfjs-dist:
-        specifier: ^5.2.133
-        version: 5.2.133
       xlsx:
         specifier: ^0.18.5
         version: 0.18.5
@@ -33,6 +30,9 @@ importers:
       '@xmldom/xmldom':
         specifier: ^0.9.8
         version: 0.9.8
+      pdfjs-dist:
+        specifier: ^5.2.133
+        version: 5.2.133
       puppeteer:
         specifier: ^24.8.1
         version: 24.8.1
