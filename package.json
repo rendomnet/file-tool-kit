@@ -27,11 +27,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server:web": "vite examples/web",
-    "test:e2e:web": "ts-node tests/e2e/web-extraction.e2e.ts",
+    "test:e2e:web": "ts-node -r tsconfig-paths/register tests/e2e/web-extraction.e2e.ts",
     "test:e2e:web:full": "start-server-and-test server:web http://localhost:5173 test:e2e:web"
   },
   "keywords": [],
-  "author": "Your Name <your@email.com>",
   "license": "MIT",
   "description": "Cross-platform TypeScript library for unified file manipulation and text extraction (Web & React Native)",
   "repository": {
@@ -42,16 +41,18 @@
     "@types/jszip": "^3.4.1",
     "@types/pdfjs-dist": "^2.10.378",
     "@types/xlsx": "^0.0.36",
+    "@xmldom/xmldom": "^0.9.8",
     "puppeteer": "^24.8.1",
     "start-server-and-test": "^2.0.11",
+    "tsconfig-paths": "^4.2.0",
     "vite": "^6.3.5",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.1.3"
   },
   "dependencies": {
     "jszip": "^3.10.1",
     "mammoth": "^1.9.0",
     "pdfjs-dist": "^5.2.133",
-    "pptx-parser": "1.1.7-beta.9",
     "xlsx": "^0.18.5"
   }
 }
