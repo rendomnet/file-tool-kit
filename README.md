@@ -31,6 +31,26 @@ import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url';
 
 const filesUtil = new FilesUtilWeb(workerSrc);
 
+// Extract text from a remote file URL
+async function extractTextFromUrl(url: string) {
+  try {
+    const text = await filesUtil.urlToText(url);
+    console.log('Extracted text:', text);
+  } catch (err) {
+    console.error('Extraction error:', err);
+  }
+}
+
+// Or get the serialized file object from a URL
+async function getSerializedFromUrl(url: string) {
+  try {
+    const serialized = await filesUtil.urlToSerializedData(url);
+    // You can now use serialized with other methods
+  } catch (err) {
+    console.error('Serialization error:', err);
+  }
+}
+
 // Example: Extract text from a file input
 async function handleFileInput(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -53,6 +73,26 @@ async function handleFileInput(event: Event) {
 import { FilesUtilRN } from 'file-tool-kit/rn';
 const filesUtil = new FilesUtilRN();
 
+// Extract text from a remote file URL (requires network permissions)
+async function extractTextFromUrl(url: string) {
+  try {
+    const text = await filesUtil.urlToText(url);
+    console.log('Extracted text:', text);
+  } catch (err) {
+    console.error('Extraction error:', err);
+  }
+}
+
+// Or get the serialized file object from a URL
+async function getSerializedFromUrl(url: string) {
+  try {
+    const serialized = await filesUtil.urlToSerializedData(url);
+    // You can now use serialized with other methods
+  } catch (err) {
+    console.error('Serialization error:', err);
+  }
+}
+
 // Example: Extract text from a file (using a file picker and base64)
 async function extractTextFromFile(base64: string, fileType: string, fileName: string) {
   try {
@@ -72,6 +112,7 @@ async function extractTextFromFile(base64: string, fileType: string, fileName: s
   }
 }
 ```
+> **Note:** In React Native, you may need to polyfill `fetch` or use a library like `react-native-fetch-blob` for binary downloads, depending on your environment.
 
 ### React Native Support & PDF Extraction
 - All formats except PDF are supported in React Native (DOCX, XLSX, PPTX, CSV, TXT, JSON).
@@ -93,6 +134,7 @@ Aliases are configured in `tsconfig.json` and supported in Vite and ts-node via 
 ## API
 - `urlToText(url: string): Promise<string>` *(Web only)*
 - `serializedToText(serializedData: SerializedData): Promise<string>`
+- `urlToSerializedData(url: string): Promise<SerializedData>`
 - ...
 
 ## Installation
