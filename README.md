@@ -3,14 +3,14 @@
 A cross-platform TypeScript library for unified, high-level file manipulation and text extraction across Web (browser) and React Native environments.
 
 ## Features
-- Extract text from PDF, DOCX, XLSX, CSV, PPTX, TXT, and JSON
+- Extract text from PDF, DOCX, XLSX, CSV, PPTX, TXT, and JSON (PDF extraction is **not supported in React Native**)
 - Consistent API for Web and React Native
 - Easy to extend for new environments and file types
 - Robust file type detection (magic numbers, extensions)
 - Clear error for unsupported formats (e.g., legacy PPT/DOC/XLS)
 
 ## Supported File Types
-- PDF (`.pdf`)
+- PDF (`.pdf`) *(Web only)*
 - Word (`.docx`, `.doc` [only for detection, not extraction])
 - Excel (`.xlsx`, `.xls` [only for detection, not extraction])
 - PowerPoint (`.pptx`)
@@ -20,16 +20,67 @@ A cross-platform TypeScript library for unified, high-level file manipulation an
 
 > **Note:** Legacy Office formats (`.doc`, `.xls`, `.ppt`) are detected but not supported for extraction. You will get a clear error if you try to extract from them.
 
-## Usage
-```ts
-// For browser/web:
-import { FilesUtilWeb } from 'file-tool-kit/web';
-// For React Native:
-import { FilesUtilRN } from 'file-tool-kit/rn';
+## Usage Example
 
-const filesUtil = new FilesUtilWeb(workerSrc); // see PDF.js Worker Setup below
-// Use filesUtil.urlToText, filesUtil.serializedToText, etc.
+### Web (Browser)
+```ts
+// Import the web utility and the PDF.js worker URL
+import { FilesUtilWeb } from 'file-tool-kit/web';
+// @ts-ignore
+import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url';
+
+const filesUtil = new FilesUtilWeb(workerSrc);
+
+// Example: Extract text from a file input
+async function handleFileInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) return;
+  const file = input.files[0];
+  try {
+    // Serialize the file (to base64, etc.)
+    const serialized = await filesUtil.serializeFile(file);
+    // Extract text
+    const text = await filesUtil.serializedToText(serialized);
+    console.log('Extracted text:', text);
+  } catch (err) {
+    console.error('Extraction error:', err);
+  }
+}
 ```
+
+### React Native
+```ts
+import { FilesUtilRN } from 'file-tool-kit/rn';
+const filesUtil = new FilesUtilRN();
+
+// Example: Extract text from a file (using a file picker and base64)
+async function extractTextFromFile(base64: string, fileType: string, fileName: string) {
+  try {
+    // Create a serialized file object
+    const serialized = {
+      cls: 'File',
+      name: fileName,
+      type: fileType,
+      lastModified: Date.now(),
+      value: base64,
+    };
+    // Extract text
+    const text = await filesUtil.serializedToText(serialized);
+    console.log('Extracted text:', text);
+  } catch (err) {
+    console.error('Extraction error:', err);
+  }
+}
+```
+
+### React Native Support & PDF Extraction
+- All formats except PDF are supported in React Native (DOCX, XLSX, PPTX, CSV, TXT, JSON).
+- **PDF extraction is not supported in React Native.**
+- For PDF extraction in React Native, use a server-side/cloud solution:
+  1. Upload the PDF to your backend.
+  2. Extract text using a Node.js or Python library (e.g., `pdf-parse`, `PyPDF2`).
+  3. Return the extracted text to your app.
+- The library will throw a clear error if you attempt PDF extraction in React Native.
 
 ### Internal Development (Path Aliases)
 For contributors, path aliases are used for clean imports:
@@ -40,7 +91,7 @@ import { SerializedFile } from '@types/files.types';
 Aliases are configured in `tsconfig.json` and supported in Vite and ts-node via plugins.
 
 ## API
-- `urlToText(url: string): Promise<string>`
+- `urlToText(url: string): Promise<string>` *(Web only)*
 - `serializedToText(serializedData: SerializedData): Promise<string>`
 - ...
 
