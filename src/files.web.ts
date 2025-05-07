@@ -8,8 +8,7 @@ import mammoth from 'mammoth';
 import JSZip from 'jszip';
 // @ts-ignore
 import * as pdfjs from 'pdfjs-dist';
-// @ts-ignore
-import pptxParser from 'pptx-parser';
+import { PPTXExtractor } from './pptx-extractor';
 
 export class FilesUtilWeb {
   constructor(workerSrc: string) {
@@ -235,23 +234,9 @@ export class FilesUtilWeb {
     }
     try {
       const arrayBuffer = base64ToArrayBuffer((serializedData as SerializedFile).value);
-      const blob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
-      const result = await pptxParser(blob);
-      let extracted = '';
-      if (result && Array.isArray(result.slides)) {
-        extracted = result.slides
-          .map((slide: any) =>
-            (slide.pageElements || [])
-              .map((el: any) => el.text || '')
-              .filter(Boolean)
-              .join('\n')
-          )
-          .join('\n\n');
-      } else if (Array.isArray(result)) {
-        extracted = result.map((slide: any) => slide.text).join('\n\n');
-      }
-      if (!extracted.trim()) {
-        throw new Error('pptxParser result: ' + JSON.stringify(result));
+      const extracted = await PPTXExtractor.extract(arrayBuffer, { format: 'text' });
+      if (typeof extracted !== 'string' || !extracted.trim()) {
+        throw new Error('PPTXExtractor result is empty or not a string.');
       }
       return extracted;
     } catch (error) {
