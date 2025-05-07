@@ -8,6 +8,16 @@
       "import": "./dist/files.js",
       "require": "./dist/files.js",
       "types": "./dist/files.d.ts"
+    },
+    "./web": {
+      "import": "./dist/files.web.js",
+      "require": "./dist/files.web.js",
+      "types": "./dist/files.web.d.ts"
+    },
+    "./rn": {
+      "import": "./dist/files.rn.js",
+      "require": "./dist/files.rn.js",
+      "types": "./dist/files.rn.d.ts"
     }
   },
   "files": [
@@ -29,5 +39,11 @@
     "@types/jszip": "^3.4.1",
     "@types/pdfjs-dist": "^2.10.378",
     "@types/xlsx": "^0.0.36"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "mammoth": "^1.9.0",
+    "pdfjs-dist": "^5.2.133",
+    "xlsx": "^0.18.5"
   }
 }

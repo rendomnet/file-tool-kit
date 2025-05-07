@@ -9,8 +9,10 @@ A cross-platform TypeScript library for unified, high-level file manipulation an
 
 ## Usage
 ```ts
-import { FilesUtilWeb } from 'file-tool-kit'; // For browser/web
-// import { FilesUtilRN } from 'file-tool-kit'; // For React Native
+// For browser/web:
+import { FilesUtilWeb } from 'file-tool-kit/web';
+// For React Native:
+import { FilesUtilRN } from 'file-tool-kit/rn';
 
 const filesUtil = new FilesUtilWeb(/* ... */);
 // Use filesUtil.urlToText, filesUtil.serializedToText, etc.
