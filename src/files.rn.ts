@@ -1,5 +1,5 @@
-import { FILE_SIGNATURES, hasSignature, getFileExtension, base64ToArrayBuffer } from './files.shared';
-import { SerializedData, SerializedFile, SerializedFormData, SerializedJson, FileWithOptionalName } from './types/files.types';
+import { FILE_SIGNATURES, hasSignature, getFileExtension, base64ToArrayBuffer } from '@shared/files.shared';
+import { SerializedData, SerializedFile, SerializedFormData, SerializedJson, FileWithOptionalName } from '@types/files.types';
 // TODO: Import React Native-specific file handling libraries as needed
 
 export class FilesUtilRN {

@@ -4,7 +4,7 @@ import {
   SerializedFormData,
   SerializedJson,
   FileWithOptionalName,
-} from './types/files.types';
+} from '@types/files.types';
 
 import * as XLSX from 'xlsx';
 import mammoth from 'mammoth';
