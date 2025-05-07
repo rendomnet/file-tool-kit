@@ -4,7 +4,10 @@ import { FilesUtilWeb } from '../../src/files.web';
 
 const filesUtil = new FilesUtilWeb(workerSrc);
 
-const pdfUrl = '/example.pdf'; // Use local PDF for CORS-free testing
+// Example file paths (served from examples/documents via Vite publicDir)
+const pdfUrl = '/example.pdf';
+// const docxUrl = '/example.docx';
+// const xlsxUrl = '/example.xlsx';
 const btn = document.getElementById('extract-btn')!;
 const output = document.getElementById('output')!;
 
