@@ -1,0 +1,33 @@
+{
+  "name": "file-tool-kit",
+  "version": "1.0.0",
+  "main": "dist/files.js",
+  "types": "dist/files.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/files.js",
+      "require": "./dist/files.js",
+      "types": "./dist/files.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src/types/files.types.ts"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Your Name <your@email.com>",
+  "license": "MIT",
+  "description": "Cross-platform TypeScript library for unified file manipulation and text extraction (Web & React Native)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/file-tool-kit.git"
+  },
+  "devDependencies": {
+    "@types/jszip": "^3.4.1",
+    "@types/pdfjs-dist": "^2.10.378",
+    "@types/xlsx": "^0.0.36"
+  }
+}
