@@ -17,7 +17,7 @@ export class FilesUtilWeb {
   async urlToText(url: string): Promise<string> {
     try {
       const serializedData = await this.urlToSerializedData(url);
-      return this.serializedToText(serializedData);
+      return this.serializedToText(serializedData, url);
     } catch (error) {
       throw new Error(
         `Failed to convert file to text: ${error instanceof Error ? error.message : String(error)}`
@@ -101,7 +101,7 @@ export class FilesUtilWeb {
     return fullText;
   }
 
-  async analyzeFileType(serializedFile: SerializedFile): Promise<{ extension: string; mimeType: string }> {
+  async analyzeFileType(serializedFile: SerializedFile, fileUrl?: string): Promise<{ extension: string; mimeType: string }> {
     const arrayBuffer = base64ToArrayBuffer(serializedFile.value);
     if (hasSignature(arrayBuffer, FILE_SIGNATURES.PDF)) {
       return { extension: 'pdf', mimeType: 'application/pdf' };
@@ -121,18 +121,37 @@ export class FilesUtilWeb {
     if (hasSignature(arrayBuffer, FILE_SIGNATURES.DOC_OLD)) {
       return { extension: 'doc', mimeType: 'application/msword' };
     }
+    // Fallback: use file extension from fileUrl if available
+    if (fileUrl) {
+      const extMatch = fileUrl.match(/\.([a-zA-Z0-9]+)$/);
+      if (extMatch) {
+        const ext = extMatch[1].toLowerCase();
+        const mimeTypes: { [key: string]: string } = {
+          pdf: 'application/pdf',
+          docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          doc: 'application/msword',
+          xls: 'application/vnd.ms-excel',
+          pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+          ppt: 'application/vnd.ms-powerpoint',
+          txt: 'text/plain',
+          json: 'application/json',
+        };
+        return { extension: ext, mimeType: mimeTypes[ext] || 'application/octet-stream' };
+      }
+    }
     return {
       extension: getFileExtension(serializedFile.type) || 'unknown',
       mimeType: serializedFile.type || 'application/octet-stream',
     };
   }
 
-  async serializedToText(serializedData: SerializedData): Promise<string> {
+  async serializedToText(serializedData: SerializedData, fileUrl?: string): Promise<string> {
     try {
       if (!serializedData || (serializedData.cls !== 'File' && serializedData.cls !== 'Blob')) {
         throw new Error('Invalid file data');
       }
-      const fileInfo = await this.analyzeFileType(serializedData as SerializedFile);
+      const fileInfo = await this.analyzeFileType(serializedData as SerializedFile, fileUrl);
       switch (fileInfo.extension) {
         case 'pdf': {
           return await this.extractTextFromPDF(serializedData);
