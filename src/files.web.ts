@@ -118,7 +118,19 @@ export class FilesUtilWeb {
       }
       return { extension: 'zip', mimeType: 'application/zip' };
     }
+    // Detect legacy Office formats by magic number
     if (hasSignature(arrayBuffer, FILE_SIGNATURES.DOC_OLD)) {
+      // Try to guess which legacy format based on file extension or fallback
+      if (fileUrl) {
+        const extMatch = fileUrl.match(/\.([a-zA-Z0-9]+)$/);
+        if (extMatch) {
+          const ext = extMatch[1].toLowerCase();
+          if (ext === 'doc') return { extension: 'doc', mimeType: 'application/msword' };
+          if (ext === 'xls') return { extension: 'xls', mimeType: 'application/vnd.ms-excel' };
+          if (ext === 'ppt') return { extension: 'ppt', mimeType: 'application/vnd.ms-powerpoint' };
+        }
+      }
+      // Fallback: unknown legacy Office
       return { extension: 'doc', mimeType: 'application/msword' };
     }
     // Fallback: use file extension from fileUrl if available
@@ -140,6 +152,7 @@ export class FilesUtilWeb {
         return { extension: ext, mimeType: mimeTypes[ext] || 'application/octet-stream' };
       }
     }
+    // Fallback: unknown
     return {
       extension: getFileExtension(serializedFile.type) || 'unknown',
       mimeType: serializedFile.type || 'application/octet-stream',

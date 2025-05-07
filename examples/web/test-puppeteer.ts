@@ -2,8 +2,11 @@ import puppeteer from 'puppeteer';
 
 const fileTypes = [
   { label: 'PDF', value: '/example.pdf' },
+  { label: 'DOC (legacy)', value: '/example.doc' },
   { label: 'DOCX', value: '/example.docx' },
+  { label: 'XLS (legacy)', value: '/example.xls' },
   { label: 'XLSX', value: '/example.xlsx' },
+  { label: 'PPT (legacy)', value: '/example.ppt' },
 ];
 
 async function run() {
