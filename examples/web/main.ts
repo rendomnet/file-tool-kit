@@ -1,9 +1,10 @@
+// @ts-ignore
+import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url';
 import { FilesUtilWeb } from '../../src/files.web';
 
-const workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.2.133/pdf.worker.min.js';
 const filesUtil = new FilesUtilWeb(workerSrc);
 
-const pdfUrl = 'https://arxiv.org/pdf/1706.03762.pdf'; // Example PDF
+const pdfUrl = '/example.pdf'; // Use local PDF for CORS-free testing
 const btn = document.getElementById('extract-btn')!;
 const output = document.getElementById('output')!;
 

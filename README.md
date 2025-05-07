@@ -30,3 +30,19 @@ pnpm add file-tool-kit
 
 ## License
 MIT 
+
+## PDF.js Worker Setup (Web)
+
+When using PDF extraction in the browser, you must provide the path to the PDF.js worker script. For modern bundlers like Vite or webpack, use the `?url` import to get the correct worker URL:
+
+```ts
+// Vite/webpack example:
+// @ts-ignore
+import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url';
+import { FilesUtilWeb } from 'file-tool-kit/web';
+
+const filesUtil = new FilesUtilWeb(workerSrc); // workerSrc can be a string or { url: string }
+```
+
+- The library supports both a string URL or an object with a `url` property (as some bundlers may provide).
+- If you are not using a bundler, you can provide a direct path to the worker script as a string. 
