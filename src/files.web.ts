@@ -8,6 +8,8 @@ import mammoth from 'mammoth';
 import JSZip from 'jszip';
 // @ts-ignore
 import * as pdfjs from 'pdfjs-dist';
+// @ts-ignore
+import pptxParser from 'pptx-parser';
 
 export class FilesUtilWeb {
   constructor(workerSrc: string) {
@@ -104,6 +106,7 @@ export class FilesUtilWeb {
   async analyzeFileType(serializedFile: SerializedFile, fileUrl?: string): Promise<{ extension: string; mimeType: string }> {
     const arrayBuffer = base64ToArrayBuffer(serializedFile.value);
     if (hasSignature(arrayBuffer, FILE_SIGNATURES.PDF)) {
+      console.log('Detected file type: pdf');
       return { extension: 'pdf', mimeType: 'application/pdf' };
     }
     if (hasSignature(arrayBuffer, FILE_SIGNATURES.ZIP)) {
@@ -114,23 +117,23 @@ export class FilesUtilWeb {
           xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
         };
+        console.log('Detected file type:', format);
         return { extension: format, mimeType: mimeTypes[format] };
       }
+      console.log('Detected file type: zip');
       return { extension: 'zip', mimeType: 'application/zip' };
     }
-    // Detect legacy Office formats by magic number
     if (hasSignature(arrayBuffer, FILE_SIGNATURES.DOC_OLD)) {
-      // Try to guess which legacy format based on file extension or fallback
       if (fileUrl) {
         const extMatch = fileUrl.match(/\.([a-zA-Z0-9]+)$/);
         if (extMatch) {
           const ext = extMatch[1].toLowerCase();
-          if (ext === 'doc') return { extension: 'doc', mimeType: 'application/msword' };
-          if (ext === 'xls') return { extension: 'xls', mimeType: 'application/vnd.ms-excel' };
-          if (ext === 'ppt') return { extension: 'ppt', mimeType: 'application/vnd.ms-powerpoint' };
+          if (ext === 'doc') { console.log('Detected file type: doc'); return { extension: 'doc', mimeType: 'application/msword' }; }
+          if (ext === 'xls') { console.log('Detected file type: xls'); return { extension: 'xls', mimeType: 'application/vnd.ms-excel' }; }
+          if (ext === 'ppt') { console.log('Detected file type: ppt'); return { extension: 'ppt', mimeType: 'application/vnd.ms-powerpoint' }; }
         }
       }
-      // Fallback: unknown legacy Office
+      console.log('Detected file type: doc (legacy)');
       return { extension: 'doc', mimeType: 'application/msword' };
     }
     // Fallback: use file extension from fileUrl if available
@@ -148,13 +151,17 @@ export class FilesUtilWeb {
           ppt: 'application/vnd.ms-powerpoint',
           txt: 'text/plain',
           json: 'application/json',
+          csv: 'text/csv',
         };
+        console.log('Detected file type (by extension):', ext);
         return { extension: ext, mimeType: mimeTypes[ext] || 'application/octet-stream' };
       }
     }
     // Fallback: unknown
+    const fallbackExt = getFileExtension(serializedFile.type) || 'unknown';
+    console.log('Detected file type (fallback):', fallbackExt);
     return {
-      extension: getFileExtension(serializedFile.type) || 'unknown',
+      extension: fallbackExt,
       mimeType: serializedFile.type || 'application/octet-stream',
     };
   }
@@ -183,6 +190,9 @@ export class FilesUtilWeb {
         }
         case 'csv': {
           return atob((serializedData as SerializedFile).value);
+        }
+        case 'pptx': {
+          return await this.extractTextFromPPTX(serializedData);
         }
         default: {
           throw new Error(`Unsupported file type: ${fileInfo.extension}`);
@@ -215,6 +225,38 @@ export class FilesUtilWeb {
     } catch (error) {
       throw new Error(
         `Failed to extract PDF text: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+  }
+
+  async extractTextFromPPTX(serializedData: SerializedData): Promise<string> {
+    if (!serializedData || (serializedData.cls !== 'File' && serializedData.cls !== 'Blob')) {
+      throw new Error('Provided data is not a valid PPTX file.');
+    }
+    try {
+      const arrayBuffer = base64ToArrayBuffer((serializedData as SerializedFile).value);
+      const blob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+      const result = await pptxParser(blob);
+      let extracted = '';
+      if (result && Array.isArray(result.slides)) {
+        extracted = result.slides
+          .map((slide: any) =>
+            (slide.pageElements || [])
+              .map((el: any) => el.text || '')
+              .filter(Boolean)
+              .join('\n')
+          )
+          .join('\n\n');
+      } else if (Array.isArray(result)) {
+        extracted = result.map((slide: any) => slide.text).join('\n\n');
+      }
+      if (!extracted.trim()) {
+        throw new Error('pptxParser result: ' + JSON.stringify(result));
+      }
+      return extracted;
+    } catch (error) {
+      throw new Error(
+        `Failed to extract PPTX text: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   }
