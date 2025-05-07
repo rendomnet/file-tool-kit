@@ -25,7 +25,8 @@
     "src/types/files.types.ts"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example:web": "vite examples/web"
   },
   "keywords": [],
   "author": "Your Name <your@email.com>",
@@ -38,7 +39,9 @@
   "devDependencies": {
     "@types/jszip": "^3.4.1",
     "@types/pdfjs-dist": "^2.10.378",
-    "@types/xlsx": "^0.0.36"
+    "@types/xlsx": "^0.0.36",
+    "puppeteer": "^24.8.1",
+    "vite": "^6.3.5"
   },
   "dependencies": {
     "jszip": "^3.10.1",
