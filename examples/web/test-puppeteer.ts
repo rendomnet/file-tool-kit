@@ -7,14 +7,14 @@ const fileTypes = [
   { label: 'XLS (legacy)', value: '/example.xls' },
   { label: 'XLSX', value: '/example.xlsx' },
   { label: 'PPT (legacy)', value: '/example.ppt' },
+  { label: 'PPT (legacy) 2', value: '/example-2.ppt' },
   { label: 'CSV', value: '/example.csv' },
   { label: 'PPTX', value: '/example.pptx' },
 ];
 
 const expectedTexts: Record<string, string> = {
-  '/example.docx': 'lorem',
-  '/example.ppt': 'commonly',
-  '/example.pptx': 'lorem',
+  '/example.docx': 'lorem ipsum',
+  '/example.pptx': 'lorem ipsum',
   // Add more as needed
 };
 

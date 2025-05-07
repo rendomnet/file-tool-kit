@@ -46,3 +46,27 @@ const filesUtil = new FilesUtilWeb(workerSrc); // workerSrc can be a string or {
 
 - The library supports both a string URL or an object with a `url` property (as some bundlers may provide).
 - If you are not using a bundler, you can provide a direct path to the worker script as a string. 
+
+## Running Integration (E2E) Tests
+
+To start the web example server:
+
+```sh
+pnpm run server:web
+```
+
+To run the browser-based integration test (Puppeteer):
+
+```sh
+pnpm run test:e2e:web
+```
+
+This will launch a headless browser, run extraction for all supported file types, and assert expected output (e.g., 'lorem ipsum' in DOCX and PPTX).
+
+To run both the web server and the E2E test in a single command:
+
+```sh
+pnpm run test:e2e:web:full
+```
+
+This will start the dev server, wait for it to be ready, run the E2E test, and shut down the server automatically. 
