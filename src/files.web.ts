@@ -181,6 +181,9 @@ export class FilesUtilWeb {
         case 'json': {
           return atob((serializedData as SerializedFile).value);
         }
+        case 'csv': {
+          return atob((serializedData as SerializedFile).value);
+        }
         default: {
           throw new Error(`Unsupported file type: ${fileInfo.extension}`);
         }

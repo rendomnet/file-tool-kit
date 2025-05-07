@@ -8,6 +8,8 @@ const fileTypes = [
   { label: 'XLSX', value: '/example.xlsx' },
   { label: 'PPT (legacy)', value: '/example.ppt' },
   { label: 'PPT (legacy) 2', value: '/example-2.ppt' },
+  { label: 'CSV', value: '/example.csv' },
+  { label: 'PPTX', value: '/example.pptx' },
 ];
 
 async function run() {
