@@ -10,6 +10,11 @@ import JSZip from 'jszip';
 import * as pdfjs from 'pdfjs-dist';
 import { PPTXExtractor } from './pptx-extractor';
 
+// Supported file extensions for extraction
+const SUPPORTED_EXTENSIONS = [
+  'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'json', 'csv', 'pptx'
+];
+
 export class FilesUtilWeb {
   constructor(workerSrc: string) {
     pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
@@ -171,6 +176,9 @@ export class FilesUtilWeb {
         throw new Error('Invalid file data');
       }
       const fileInfo = await this.analyzeFileType(serializedData as SerializedFile, fileUrl);
+      if (!SUPPORTED_EXTENSIONS.includes(fileInfo.extension)) {
+        throw new Error(`Unsupported file type: ${fileInfo.extension}. Supported types are: ${SUPPORTED_EXTENSIONS.join(', ')}`);
+      }
       switch (fileInfo.extension) {
         case 'pdf': {
           return await this.extractTextFromPDF(serializedData);
@@ -194,6 +202,7 @@ export class FilesUtilWeb {
           return await this.extractTextFromPPTX(serializedData);
         }
         default: {
+          // This should never be reached due to the check above
           throw new Error(`Unsupported file type: ${fileInfo.extension}`);
         }
       }
