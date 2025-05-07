@@ -7,6 +7,7 @@ const fileTypes = [
   { label: 'XLS (legacy)', value: '/example.xls' },
   { label: 'XLSX', value: '/example.xlsx' },
   { label: 'PPT (legacy)', value: '/example.ppt' },
+  { label: 'PPT (legacy) 2', value: '/example-2.ppt' },
 ];
 
 async function run() {
