@@ -1,0 +1,10 @@
+# Exclude test, config, and local files
+src/
+!src/types/files.types.ts
+node_modules/
+.git/
+.gitignore
+.npmignore
+tsconfig.json
+README.md
+*.log 
