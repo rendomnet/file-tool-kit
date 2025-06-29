@@ -4,7 +4,7 @@ import {
   SerializedFormData,
   SerializedJson,
   FileWithOptionalName,
-} from '@types/files.types';
+} from './types/files.types';
 
 import * as XLSX from 'xlsx';
 import mammoth from 'mammoth';
@@ -229,15 +229,31 @@ class FilesUtil {
     switch (cls) {
       case 'FormData': {
         const formData = src as FormData;
+        // Cast to any to access entries() which is available in the browser
+        const formDataAny = formData as any;
+        const rawEntries = formDataAny.entries ? Array.from(formDataAny.entries() as Iterable<[string, any]>) : [];
+        const entriesArray: Array<[string, any]> = Array.isArray(rawEntries) ? rawEntries : [];
+        
+        // Group values by key to handle multiple values for the same key
+        const keyValueMap = new Map<string, any[]>();
+        for (const [key, value] of entriesArray) {
+          if (!keyValueMap.has(key)) {
+            keyValueMap.set(key, []);
+          }
+          keyValueMap.get(key)?.push(value);
+        }
+        
         const serializedFormData: SerializedFormData = {
           cls: 'FormData',
           value: await Promise.all(
-            Array.from(formData.keys(), async (key) => [
-              key,
-              await Promise.all(
-                formData.getAll(key).map((item) => this.serializeFile(item as Blob | File))
-              ),
-            ])
+            Array.from(keyValueMap.entries()).map(async ([key, values]) => {
+              const serializedValues = await Promise.all(
+                values.map(value => this.serializeFile(value as Blob | File))
+              );
+              // Filter out undefined values
+              const validValues = serializedValues.filter((v): v is Exclude<typeof v, undefined> => v !== undefined);
+              return [key, validValues] as [string, SerializedData[]];
+            })
           ),
         };
         return serializedFormData;

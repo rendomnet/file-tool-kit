@@ -1,5 +1,5 @@
-import { FILE_SIGNATURES, hasSignature, getFileExtension, base64ToArrayBuffer } from '@shared/files.shared';
-import { SerializedData, SerializedFile, SerializedFormData, SerializedJson, FileWithOptionalName } from '@types/files.types';
+import { FILE_SIGNATURES, hasSignature, getFileExtension, base64ToArrayBuffer } from './files.shared';
+import { SerializedData, SerializedFile, SerializedFormData, SerializedJson, FileWithOptionalName } from './types/files.types';
 import * as XLSX from 'xlsx';
 import mammoth from 'mammoth';
 import JSZip from 'jszip';

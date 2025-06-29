@@ -1,4 +1,4 @@
-import { FilesUtilWeb } from './src/files.web';
+import { FilesUtilWeb } from '../../src/files.web';
 
 // Example usage for web
 async function runExample() {
