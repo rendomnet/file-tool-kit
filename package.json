@@ -1,6 +1,6 @@
 {
   "name": "@rendomnet/file-tool-kit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/files.js",
   "types": "dist/files.d.ts",
   "exports": {
