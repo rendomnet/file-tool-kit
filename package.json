@@ -1,5 +1,5 @@
 {
-  "name": "file-tool-kit",
+  "name": "@rendomnet/file-tool-kit",
   "version": "1.0.1",
   "main": "dist/files.js",
   "types": "dist/files.d.ts",
@@ -31,7 +31,6 @@
     "server:web": "vite examples/web",
     "test:e2e:web": "ts-node -r tsconfig-paths/register tests/e2e/web-extraction.e2e.ts",
     "test:e2e:web:full": "start-server-and-test server:web http://localhost:5173 test:e2e:web",
-    "prepublishOnly": "npm run build && npm test",
     "publish:public": "npm publish --access public",
     "publish:dry-run": "npm publish --dry-run"
   },
