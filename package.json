@@ -18,7 +18,8 @@
       "import": "./dist/files.rn.js",
       "require": "./dist/files.rn.js",
       "types": "./dist/files.rn.d.ts"
-    }
+    },
+    "./dist/*": "./dist/*"
   },
   "files": [
     "dist",
