@@ -1,25 +1,18 @@
 {
   "name": "@rendomnet/file-tool-kit",
-  "version": "1.0.2",
-  "main": "dist/files.js",
-  "types": "dist/files.d.ts",
+  "version": "1.0.7",
+  "description": "A cross-platform file utility toolkit for React Native and Web",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/files.js",
-      "require": "./dist/files.js",
-      "types": "./dist/files.d.ts"
-    },
-    "./web": {
-      "import": "./dist/files.web.js",
-      "require": "./dist/files.web.js",
-      "types": "./dist/files.web.d.ts"
-    },
-    "./rn": {
-      "import": "./dist/files.rn.js",
-      "require": "./dist/files.rn.js",
-      "types": "./dist/files.rn.d.ts"
-    },
-    "./dist/*": "./dist/*"
+    ".": "./dist/index.js",
+    "./web": "./dist/files.web.js",
+    "./rn": "./dist/rn.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": ["./dist/*.d.ts"]
+    }
   },
   "files": [
     "dist",
@@ -37,7 +30,6 @@
   },
   "keywords": [],
   "license": "MIT",
-  "description": "Cross-platform TypeScript library for unified file manipulation and text extraction (Web & React Native)",
   "repository": {
     "type": "git",
     "url": "https://github.com/yourusername/file-tool-kit.git"
